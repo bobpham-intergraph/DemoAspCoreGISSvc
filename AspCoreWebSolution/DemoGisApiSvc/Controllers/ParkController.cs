@@ -13,6 +13,7 @@ namespace DemoGisApiSvc.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class ParkController : GisController
     {
         public ParkController(IConfiguration iConfig): base(iConfig)
@@ -37,9 +38,10 @@ namespace DemoGisApiSvc.Controllers
 
         [Route("byname/{name}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name)
+        [ProducesResponseType(200)]
+        public IActionResult GetParkByName(string name)
         {
-            return SARepository.FindParkByName(name);
+            return Ok(SARepository.FindParkByName(name));
         }
 
         [Route("byId/{id}")]
