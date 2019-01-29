@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MongodbConnect.FeatureRepository;
-using MongodbConnect.Models.Park;
+using MongodbConnect.Models.RatingUnit;
 using MongodbConnect.Repository;
 
 namespace DemoGisApiSvc.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParkController : GisController
+    public class RatingUnitController : GisController
     {
-        public ParkController(IConfiguration iConfig): base(iConfig)
+        public RatingUnitController(IConfiguration iConfig) : base(iConfig)
         {
         }
 
@@ -23,80 +23,80 @@ namespace DemoGisApiSvc.Controllers
         [Route("info")]
         public string Info()
         {
-            return "ParkController";
+            return "RatingUnitController";
         }
 
-        public ParkRepository SARepository
+        public RatingUnitRepository SARepository
         {
             get
             {
-                return _unitOfWork.ParkRepository;
+                return _unitOfWork.RatingUnitRepository;
             }
         }
 
-
         [Route("byname/{name}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name)
+        public IEnumerable<RatingUnitDocument> GetRatingUnitByName(string name)
         {
-            return SARepository.FindParkByName(name);
+            return SARepository.FindRatingUnitByName(name);
         }
+
 
         [Route("byId/{id}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkById(int id)
+        public IEnumerable<RatingUnitDocument> GetRatingUnitById(int id)
         {
-            return SARepository.FindParkById(id);
+            return SARepository.FindRatingUnitById(id);
         }
 
 
         [Route("byname/{name}/count")]
         [HttpGet]
-        public int GetParkByNameCount(string name)
+        public int GetRatingUnitByNameCount(string name)
         {
-            return SARepository.FindParkByName(name).Count();
+            return SARepository.FindRatingUnitByName(name).Count();
         }
 
 
         [Route("byname/{name}/{numberofrecords}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name, int numberofrecords)
+        public IEnumerable<RatingUnitDocument> GetRatingUnitByName(string name, int numberofrecords)
         {
-            return SARepository.FindParkByName(name).Take(numberofrecords);
+            return SARepository.FindRatingUnitByName(name).Take(numberofrecords);
         }
 
 
         [Route("byname/{name}/{numberofrecords}/{page}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name, int numberofrecords, int page)
+        public IEnumerable<RatingUnitDocument> GetRatingUnitByName(string name, int numberofrecords, int page)
         {
             if (page <= 0)
                 page = 1;
 
-            int count = SARepository.FindParkByName(name).Count();
+            int count = SARepository.FindRatingUnitByName(name).Count();
 
             if (numberofrecords <= 0)
                 numberofrecords = 10;
 
             int allpage = ((count - (count / page) * page) > 0) ? count / page + 1 : count / page;
 
-            return SARepository.FindParkByName(name).Skip(page - 1).Take(numberofrecords);
+            return SARepository.FindRatingUnitByName(name).Skip(page - 1).Take(numberofrecords);
         }
 
 
         [Route("bynamepaging/{name}/{numberofrecords}/{index}")]
         [HttpGet]
-        public PagingResult<ParkDocument> GetParkByNamePaging(string name, int numberofrecords, int index)
+        public PagingResult<RatingUnitDocument> GetRatingUnitByNamePaging(string name, int numberofrecords, int index)
         {
             if (index <= 0)
                 index = 1;
 
+
             if (numberofrecords <= 0)
                 numberofrecords = 10;
 
-            return SARepository.FindParkByNamePaging(name, numberofrecords, index);
+            return SARepository.FindRatingUnitByNamePaging(name, numberofrecords, index);
         }
-
 
     }
 }

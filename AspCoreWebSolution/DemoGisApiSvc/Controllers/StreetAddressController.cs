@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MongodbConnect.FeatureRepository;
-using MongodbConnect.Models.Park;
+using MongodbConnect.Models.StreetAddress;
 using MongodbConnect.Repository;
 
 namespace DemoGisApiSvc.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParkController : GisController
+    public class StreetAddressController : GisController
     {
-        public ParkController(IConfiguration iConfig): base(iConfig)
+        public StreetAddressController(IConfiguration iConfig) : base(iConfig)
         {
         }
 
@@ -23,80 +23,75 @@ namespace DemoGisApiSvc.Controllers
         [Route("info")]
         public string Info()
         {
-            return "ParkController";
+            return "StreetAddressController";
         }
 
-        public ParkRepository SARepository
+        public StreetAddressRepository SARepository
         {
             get
             {
-                return _unitOfWork.ParkRepository;
+                return _unitOfWork.StreetAddressRepository;
             }
         }
 
 
+        //update comment
         [Route("byname/{name}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name)
+        public IEnumerable<StreetAddressDocument> GetAddressByName(string name)
         {
-            return SARepository.FindParkByName(name);
-        }
-
-        [Route("byId/{id}")]
-        [HttpGet]
-        public IEnumerable<ParkDocument> GetParkById(int id)
-        {
-            return SARepository.FindParkById(id);
+            return SARepository.FindStreetAddressByName(name);
         }
 
 
         [Route("byname/{name}/count")]
         [HttpGet]
-        public int GetParkByNameCount(string name)
+        public int GetAddressByNameCount(string name)
         {
-            return SARepository.FindParkByName(name).Count();
+            return SARepository.FindStreetAddressByName(name).Count();
         }
 
 
         [Route("byname/{name}/{numberofrecords}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name, int numberofrecords)
+        public IEnumerable<StreetAddressDocument> GetAddressByName(string name, int numberofrecords)
         {
-            return SARepository.FindParkByName(name).Take(numberofrecords);
+            return SARepository.FindStreetAddressByName(name).Take(numberofrecords);
         }
 
 
         [Route("byname/{name}/{numberofrecords}/{page}")]
         [HttpGet]
-        public IEnumerable<ParkDocument> GetParkByName(string name, int numberofrecords, int page)
+        public IEnumerable<StreetAddressDocument> GetAddressByName(string name, int numberofrecords, int page)
         {
             if (page <= 0)
                 page = 1;
 
-            int count = SARepository.FindParkByName(name).Count();
+            int count = SARepository.FindStreetAddressByName(name).Count();
 
             if (numberofrecords <= 0)
                 numberofrecords = 10;
 
             int allpage = ((count - (count / page) * page) > 0) ? count / page + 1 : count / page;
 
-            return SARepository.FindParkByName(name).Skip(page - 1).Take(numberofrecords);
+            return SARepository.FindStreetAddressByName(name).Skip(page - 1).Take(numberofrecords);
         }
 
 
         [Route("bynamepaging/{name}/{numberofrecords}/{index}")]
         [HttpGet]
-        public PagingResult<ParkDocument> GetParkByNamePaging(string name, int numberofrecords, int index)
+        public PagingResult<StreetAddressDocument> GetAddressByNamePaging(string name, int numberofrecords, int index)
         {
             if (index <= 0)
                 index = 1;
 
+
             if (numberofrecords <= 0)
                 numberofrecords = 10;
 
-            return SARepository.FindParkByNamePaging(name, numberofrecords, index);
+
+
+            return SARepository.FindStreetAddressByNamePaging(name, numberofrecords, index);
         }
-
-
     }
 }

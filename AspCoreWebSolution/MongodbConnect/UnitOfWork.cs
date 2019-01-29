@@ -1,4 +1,5 @@
-﻿using MongodbConnect.FeatureRepository;
+﻿using Microsoft.Extensions.Configuration;
+using MongodbConnect.FeatureRepository;
 using MongodbConnect.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,11 @@ namespace MongodbConnect
 {
     public class UnitOfWork
     {
+        private IConfiguration _configuration;
+        public UnitOfWork(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         protected MongoDbContext _dbcontext;
         public MongoDbContext DbContext
         {
@@ -16,9 +22,9 @@ namespace MongodbConnect
             {
                 if (_dbcontext == null)
                 {
-                    string cs = ConfigurationManager.ConnectionStrings["MongoDb"].ConnectionString;
+                    string cs = _configuration.GetConnectionString("MongoDb").ToString();
 
-                    string dbName = ConfigurationManager.AppSettings["MongoDbConnectionName"].ToString();
+                    string dbName = _configuration.GetSection("MongoDbConnectionName").Value.ToString();   
 
 
                     _dbcontext = new MongoDbContext(cs, dbName);
@@ -36,7 +42,7 @@ namespace MongodbConnect
             {
                 if (_parkRepository == null)
                 {
-                    string collectionName = ConfigurationManager.AppSettings["ParkCollection"].ToString();
+                    string collectionName = _configuration.GetSection("ParkCollection").Value.ToString();
                     _parkRepository = new ParkRepository(DbContext, collectionName);
                 }
 
@@ -54,7 +60,7 @@ namespace MongodbConnect
             {
                 if (_ratingUnitRepository == null)
                 {
-                    string collectionName = ConfigurationManager.AppSettings["RatingUnitCollection"].ToString();
+                    string collectionName = _configuration.GetSection("RatingUnitCollection").Value.ToString(); 
                     _ratingUnitRepository = new RatingUnitRepository(DbContext, collectionName);
                 }
 
@@ -71,7 +77,7 @@ namespace MongodbConnect
             {
                 if (_streetAddressRepository == null)
                 {
-                    string collectionName = ConfigurationManager.AppSettings["StreetAddressCollection"].ToString();
+                    string collectionName = _configuration.GetSection("StreetAddressCollection").Value.ToString(); 
                     _streetAddressRepository = new StreetAddressRepository(DbContext, collectionName);
                 }
 
@@ -88,7 +94,7 @@ namespace MongodbConnect
             {
                 if (_placenameRepository == null)
                 {
-                    string collectionName = ConfigurationManager.AppSettings["PlaceNameCollection"].ToString();
+                    string collectionName = _configuration.GetSection("PlaceNameCollection").Value.ToString();
                     _placenameRepository = new PlacenameRepository(DbContext, collectionName);
                 }
 
